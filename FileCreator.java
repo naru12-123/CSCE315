@@ -9,6 +9,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.OutputKeys;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -22,10 +23,10 @@ public class FileCreator {
 
     public static void main(String[] args) {
 
-        String file = "output.tsv";
+        String file = args[0];
         BufferedReader br = null;
         String line = "";
-        // String splitBy = "\\t";
+        String splitBy = "\\t+";
 
         String elementType = "";
 
@@ -42,7 +43,7 @@ public class FileCreator {
             br = new BufferedReader(new FileReader(file));
             int j = 0;
             while ((line = br.readLine()) != null) {
-                String[] values = line.split("\\t+");
+                String[] values = line.split(splitBy);
                 System.out.println(
                     "Values [nconst= " + values[0] +
                     ", name: " + values[1] +
@@ -68,16 +69,13 @@ public class FileCreator {
                 j++;
             }
 
-            
-
-            // write the content into xml file
+            // Write the content to XML file
             TransformerFactory tFactory = TransformerFactory.newInstance();
             Transformer transformer = tFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(new File("output.xml"));
-
-            // Output to console for testing
-            // StreamResult result = new StreamResult(System.out);
 
             transformer.transform(source, result);
 

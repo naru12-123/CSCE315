@@ -21,11 +21,11 @@ public class XMLTSVParser {
 
             PrintWriter writer = new PrintWriter("output.tsv", "UTF-8");
 
-            writer.println("Root element : " + doc.getDocumentElement().getNodeName()); // Print the start element
+            // writer.println("Root element : " + doc.getDocumentElement().getNodeName()); // Print the start element
             
             NodeList tableRows = doc.getElementsByTagName("tr"); // Initialize a variable with all the rows in it
 
-            writer.println("----------------------------");
+            // writer.println("----------------------------");
 
             /************** Header For .tsv ****************/
             Node rowItems = tableRows.item(0);
