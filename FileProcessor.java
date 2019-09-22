@@ -7,9 +7,29 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
-public class XMLTSVParser {
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.OutputKeys;
+
+// import org.w3c.dom.Attr;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
+public class FileProcessor {
 
     public static void main(String[] args) {
+        FileParser(args);
+    }
+
+    public static void FileParser(String[] args) {
 
         try {
             File inputFile = new File(args[0]);
@@ -61,4 +81,62 @@ public class XMLTSVParser {
             e.printStackTrace();
         }
     }
+
+    public static void FileCreator(String[] args) {
+
+        String file = args[0];
+        BufferedReader br = null;
+        String line = "";
+        String splitBy = "\\t+";
+
+        String elementType = "";
+
+        try {
+
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+
+            // root elements
+            Document doc = dBuilder.newDocument();
+            Element rootElement = doc.createElement("table");
+            doc.appendChild(rootElement);
+
+            br = new BufferedReader(new FileReader(file));
+            int j = 0;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(splitBy);
+                
+                if(j == 0) elementType = "th";
+                else elementType = "td";
+
+                Element row = doc.createElement("tr");
+                rootElement.appendChild(row);
+
+                for(int i = 0; i < values.length; i++) {
+                    Element rowItem = doc.createElement(elementType);
+                    rowItem.appendChild(doc.createTextNode(values[i]));
+                    row.appendChild(rowItem);
+                }
+                j++;
+            }
+
+            // Write the content to XML file
+            TransformerFactory tFactory = TransformerFactory.newInstance();
+            Transformer transformer = tFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File("output.xml"));
+
+            transformer.transform(source, result);
+
+        }  catch(IOException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException pce) {
+		    pce.printStackTrace();
+	    } catch (TransformerException tfe) {
+		    tfe.printStackTrace();
+	    }
+    }
+
 }
