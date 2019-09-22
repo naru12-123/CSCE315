@@ -1,13 +1,18 @@
-import org.w3c.dom.*;
-import javax.xml.parsers.*;
-import java.io.*;
+import java.io.PrintWriter;
+import java.io.File;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
 
 public class XMLTSVParser {
 
     public static void main(String[] args) {
 
         try {
-            File inputFile = new File("input.txt");
+            File inputFile = new File(args[0]);
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
