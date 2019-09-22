@@ -44,16 +44,6 @@ public class FileCreator {
             int j = 0;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(splitBy);
-                System.out.println(
-                    "Values [nconst= " + values[0] +
-                    ", name: " + values[1] +
-                    ", birthYear: " + values[2] + 
-                    ", deathYear: " + values[3] +
-                    ", primaryProfession: " + values[4] +
-                    ", knownFor: " + values[5] +
-                    "]"
-                    );
-
                 
                 if(j == 0) elementType = "th";
                 else elementType = "td";
